@@ -1,3 +1,7 @@
+environment {
+  IMAGE_TAG = "${env.BUILD_ID}"
+}
+
 pipeline {
   agent {
     kubernetes {
@@ -38,10 +42,10 @@ pipeline {
             }
           }
         }
-        stage('Docker Build and Publish') {
+        stage('OCI Build and Publish') {
           steps {
             container('kaniko') {
-              sh '/kaniko/executor -f `pwd`/Dockerfile -c `pwd` --insecure --skip-tls-verify --cache=true --destination=mxinfo.azurecr.io/dsodemo:${env.BUILD_ID}'
+              sh '/kaniko/executor -f `pwd`/Containerfile -c `pwd` --insecure --skip-tls-verify --cache=true --destination=mxinfo.azurecr.io/dsodemo:${IMAGE_TAG}'
             }
           }
         }
