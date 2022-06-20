@@ -38,6 +38,13 @@ pipeline {
             }
           }
         }
+        stage('Docker Build and Publish') {
+          steps {
+            container('kaniko') {
+              sh '/kaniko/executor -f `pwd`/Dockerfile -c `pwd` --insecure --skip-tls-verify --cache=true --destination=mxinfo.azurecr.io/dsodemo'
+            }
+          }
+        }
       }
     }
 
