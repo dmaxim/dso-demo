@@ -33,6 +33,25 @@ pipeline {
         }
       }
     }
+    stage('Static Analysis') {
+      stage('SCA') {
+        steps {
+          container('maven') {
+            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+              sh 'mvn org.owasp:dependency-check-maven:check'
+            }
+          }
+        }
+        post {
+          always {
+            archiveArtifacts allowEmptyArchive: true,
+            artifacts: 'target/dependency-check-report.html',
+            fingerprint: true,
+            onlyIfSuccessful: true
+          }
+        }
+      }
+    }
     stage('Package') {
       parallel {
         stage('Create Jarfile') {
@@ -45,7 +64,7 @@ pipeline {
         stage('OCI Build and Publish') {
           steps {
             container('kaniko') {
-              sh '/kaniko/executor -f `pwd`/Containerfile -c `pwd` --insecure --skip-tls-verify --cache=true --destination=mxinfo.azurecr.io/dsodemo:${IMAGE_TAG}'
+              sh '/kaniko/executor -f `pwd`/Containerfile -c `pwd` --insecure --skip-tls-verify --cache=true --destination=mxinfo.azurecr.io/dsodemo:latest'
             }
           }
         }
