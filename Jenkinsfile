@@ -22,12 +22,6 @@ pipeline {
         }
       }
     }
-    stage('Test') {
-      parallel {
-
-        }
-      }
-    }
     stage('Static Analysis') {
       parallel {
         stage('Unit Tests') {
@@ -67,7 +61,7 @@ pipeline {
               }
            }
         }
-        }
+      }
     }
     stage('Package') {
       parallel {
