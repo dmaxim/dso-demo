@@ -33,8 +33,7 @@ pipeline {
         }
       }
     }
-    stage('Static Analysis') {
-      stage('SCA') {
+    stage('SCA') {
         steps {
           container('maven') {
             catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
@@ -51,7 +50,6 @@ pipeline {
           }
         }
       }
-    }
     stage('Package') {
       parallel {
         stage('Create Jarfile') {
