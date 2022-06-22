@@ -112,14 +112,14 @@ pipeline {
         stage('Image Linting') {
           steps {
             container('docker-tools') {
-              sh 'dockle mxinfo.azurecr.io/dsodemo:latest'
+              sh 'dockle docker.io/dmaxim/dsodemo:latest'
             }
           }
         }
         stage('Image Scan') {
           steps {
             container('docker-tools') {
-              sh 'trivy image --exit-code 1 mxinfo.azurecr.io/dsodemo:latest'
+              sh 'trivy image --exit-code 1 dsodemo:latest'
             }
           }
         }
