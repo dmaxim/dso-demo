@@ -107,6 +107,24 @@ pipeline {
         }
       }
     }
+    stage('Image Analysis') {
+      parallel {
+        stage('Image Linting') {
+          steps {
+            container('docker-tools') {
+              sh 'dockle mxinfo.azurecr.io/dsodemo:latest'
+            }
+          }
+        }
+        stage('Image Scan') {
+          steps {
+            container('docker-tools') {
+              sh 'trivy image --exit-code 1 mxinfo.azurecr.io/dsodemo:latest'
+            }
+          }
+        }
+      }
+    }
     stage('Deploy to Dev') {
       steps {
         // TODO
