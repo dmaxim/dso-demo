@@ -101,7 +101,7 @@ pipeline {
         stage('OCI Build and Publish') {
           steps {
             container('kaniko') {
-              sh '/kaniko/executor -f `pwd`/Containerfile -c `pwd` --insecure --skip-tls-verify --cache=true --destination=mxinfo.azurecr.io/dsodemo:latest'
+              sh '/kaniko/executor -f `pwd`/Containerfile -c `pwd` --insecure --skip-tls-verify --cache=true --destination=docker.io/dmaxim/dsodemo:latest'
             }
           }
         }
@@ -119,7 +119,7 @@ pipeline {
         stage('Image Scan') {
           steps {
             container('docker-tools') {
-              sh 'trivy image --exit-code 1 dsodemo:latest'
+              sh 'trivy image --exit-code 1 docker.io/dmaxim/dsodemo:latest'
             }
           }
         }
